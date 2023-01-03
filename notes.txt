@@ -1,0 +1,68 @@
+Requirements: 
+  - Auth
+  - Calendar
+    - To-Do List
+    - Photo
+
+Create Account:
+  1. Insert Email, Name, Password
+  2. Configure Challenge
+    2.1. Number of days
+    2.2. Checklist of things
+
+Landing page:
+  - Has options button at the top
+  - Has has full calendar button in the other corner
+  - Has add photo button
+  - Has status bar of the challenge in the top middle
+  - Swipe left and right to slide through the days
+  - Has the ability to write a note for each day
+
+User Schema:
+  {
+    user-id: uint,
+    email: String,
+    username: String,
+    password: String,
+    challenge: {
+      currently_challenge: boolean,
+      using_photo: boolean,
+      challenge_length: int,
+      challenge_start: Date, 
+      things_to_do: List<String>
+    },
+    To-Do List: [ to-do schema ]
+  }
+
+To-Do Schema:
+{
+  todo list id: uint,
+  [
+    {
+      day: Date,
+      photo: Image,
+      items: [ { name: String, completed: boolean }, {..}, {..} ]
+    },
+    {
+      ...
+    }
+
+  ]
+}
+
+User Table:
+
+User-id | Email | Username | Password | Challenge-id 
+--------|-------|----------|----------|--------------
+
+Challenge Table:
+
+Challenge-id | currently-challenge | using-photo | challenge-len | challenge-start | todo-list-id
+-------------|---------------------|-------------|---------------|-----------------|--------------
+
+ToDo List Table: 
+
+todo-list-id | 
+
+
+
