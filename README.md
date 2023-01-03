@@ -1,9 +1,9 @@
-## Overview
+# Overview
 
 App for tracking a modified version of 75-hard. The user chooses what things go on
 the to-do list and how long the challenge would take. Supports the use of photo uploads
 
-# Dependencies
+## Dependencies
 
 - Backend (Node)
   - TypeScript
