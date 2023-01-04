@@ -8,7 +8,7 @@ the to-do list and how long the challenge would take. Supports the use of photo 
 - Backend (Node)
   - TypeScript
   - Nodemon
-  - Mikro-ORM 
+  - Prisma 
   - Express
 
 - Frontend (React Native)
