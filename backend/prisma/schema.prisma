@@ -29,14 +29,14 @@ model Challenge {
   active          Boolean  @default(false)
   usingPhoto      Boolean
   challengeLength Int
-  challengeStart  DateTime
+  challengeStart  DateTime @db.Date
   objectives      String[]
   updatedAt       DateTime @updatedAt
 }
 
 model DailyList {
   id     String   @id @default(uuid())
-  day    DateTime
+  day    DateTime @db.Date
   user   User     @relation(fields: [userId], references: [id])
   userId String   @unique
   items  Item[]
