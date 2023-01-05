@@ -20,8 +20,14 @@ const LoginSchema = z.object({
 
 userRouter.get('/', async (_, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
-    res.send(JSON.stringify(users));
+    const users = await prisma.user.findMany({
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+      }
+    });
+    res.send(users);
   } catch (e) {
     errorHandle(e, res);
   }
@@ -39,7 +45,7 @@ userRouter.get('/:id', async(req: Request, res: Response) => {
   }
 })
 
-userRouter.post('/create-user', async (req: Request, res: Response) => {
+userRouter.post('/create', async (req: Request, res: Response) => {
   try {
     const userReq = CreateUserSchema.parse(req.body);
     const user = await prisma.user.create({ data: userReq });
@@ -64,6 +70,16 @@ userRouter.post('/login', async (req: Request, res: Response) => {
   }
 })
 
+userRouter.delete('/delete/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    await prisma.user.delete({ where: { id: id } });
+    res.send('Successfully deleted user');
+  } catch (e) {
+    errorHandle(e, res);
+  }
+});
+
 const errorHandle = (e: unknown, res: Response) => {
   const error = e as Prisma.PrismaClientKnownRequestError; 
   
@@ -72,7 +88,7 @@ const errorHandle = (e: unknown, res: Response) => {
       res.send('There is a unique constraint violation, a new user cannot be created with this email.'); 
       break;
     case 'P2025':
-      res.send('User credentials are incorrect. Failed to login.');
+      res.send('User cannot be found in the database');
       break;
     default:
       res.send(error.message);
