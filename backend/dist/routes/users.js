@@ -29,8 +29,16 @@ const LoginSchema = zod_1.z.object({
 });
 userRouter.get('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield index_1.default.user.findMany();
-        res.send(JSON.stringify(users));
+        const users = yield index_1.default.user.findMany({
+            select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+                challenge: true
+            }
+        });
+        res.send(users);
     }
     catch (e) {
         errorHandle(e, res);
@@ -39,16 +47,14 @@ userRouter.get('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
 userRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const user = yield index_1.default.user.findUnique({
-            where: { id: id }
-        });
-        res.send(JSON.stringify(user));
+        const user = yield index_1.default.user.findUnique({ where: { id: id } });
+        res.send(user);
     }
     catch (e) {
         errorHandle(e, res);
     }
 }));
-userRouter.post('/create-user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+userRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userReq = CreateUserSchema.parse(req.body);
         const user = yield index_1.default.user.create({ data: userReq });
@@ -73,6 +79,16 @@ userRouter.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, functi
         errorHandle(e, res);
     }
 }));
+userRouter.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        yield index_1.default.user.delete({ where: { id: id } });
+        res.send('Successfully deleted user');
+    }
+    catch (e) {
+        errorHandle(e, res);
+    }
+}));
 const errorHandle = (e, res) => {
     const error = e;
     switch (error.code) {
@@ -80,7 +96,7 @@ const errorHandle = (e, res) => {
             res.send('There is a unique constraint violation, a new user cannot be created with this email.');
             break;
         case 'P2025':
-            res.send('User credentials are incorrect. Failed to login.');
+            res.send('User cannot be found in the database');
             break;
         default:
             res.send(error.message);

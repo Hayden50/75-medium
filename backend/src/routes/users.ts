@@ -22,9 +22,11 @@ userRouter.get('/', async (_, res: Response) => {
   try {
     const users = await prisma.user.findMany({
       select: {
+        id: true,
         email: true,
         firstName: true,
         lastName: true,
+        challenge: true
       }
     });
     res.send(users);
@@ -36,10 +38,8 @@ userRouter.get('/', async (_, res: Response) => {
 userRouter.get('/:id', async(req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const user = await prisma.user.findUnique({
-      where: { id: id }
-    })
-    res.send(JSON.stringify(user));
+    const user = await prisma.user.findUnique({ where: { id: id } });
+    res.send(user);
   } catch (e) {
     errorHandle(e, res);
   }
